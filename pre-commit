@@ -4,16 +4,13 @@ REPO=$1
 echo 'REPO: '$REPO >&2
 TXN=$2
 echo 'TXN: '$TXN >&2
-lookResult=$(/usr/bin/svnlook changed $REPO --transaction $TXN)
-echo 'lookup: '$lookResult >&2
 file=$(/usr/bin/svnlook changed $REPO --transaction $TXN | awk '/^A|^M|^U/ {print $2;}' )
 echo 'file: '$file >&2
-CMD=`/usr/local/share/npm/bin/jshint --config config.json $file`
+CMD=`/usr/local/share/npm/bin/jshint $file`
 if [ $? -ne 0 ]
 then
         echo $CMD >&2
         exit 1
-else
-	echo $CMD >&2
-	exit 0
 fi
+echo $CMD >&1
+exit 0
